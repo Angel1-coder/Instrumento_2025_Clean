@@ -1,36 +1,82 @@
-# Instrumento_ Development Plan
+# Instrumento - Development Plan
 
-## Current Development Status (as of August 16, 2025)
+## Project Vision
+Create a comprehensive instrument rental platform that provides musicians with flexible access to quality instruments through subscription-based services.
 
-### Completed Features
-- ✅ User Authentication (Django Allauth)
-- ✅ Basic Product Models (Category, Product)
-- ✅ Shopping Bag Functionality
-- ✅ Checkout System with Stripe
-- ✅ Homepage with Fender-Style Design
-- ✅ Hero Video Integration
+## Technical Architecture
 
-### In Progress Features
-- 🔄 Subscription System Implementation
-- 🔄 Email Confirmation System
-- 🔄 Advanced Product Management
+### Backend Framework
+- **Django 3.2+**: Core web framework
+- **Python 3.8+**: Programming language
+- **SQLite/PostgreSQL**: Database systems
+- **Django Allauth**: Authentication system
 
-### Planned Features
-- 📋 SEO Optimization
-- 📋 Responsive Design Testing
-- 📋 Performance Optimization
-- 📋 Final Testing and Deployment
+### Frontend Technologies
+- **HTML5/CSS3**: Markup and styling
+- **Bootstrap 4**: Responsive design framework
+- **JavaScript**: Interactive functionality
+- **Responsive Design**: Mobile-first approach
 
-## Development Priorities
-1. **High Priority**: Complete subscription system
-2. **Medium Priority**: Email functionality and user profiles
-3. **Low Priority**: UI polish and advanced features
+### Payment Integration
+- **Stripe**: Payment processing
+- **Secure Checkout**: PCI compliant
+- **Subscription Management**: Recurring billing
 
-## Technical Debt
-- Code optimization needed in checkout views
-- Template refactoring for better maintainability
-- Database query optimization
+## Development Phases
 
-## Next Milestone
-**Target**: Complete subscription system by August 18, 2025
-**Focus**: Payment plans, rental periods, user management
+### Phase 1: Foundation (Completed)
+- [x] Django project setup
+- [x] Core models implementation
+- [x] Authentication system
+- [x] Basic product management
+
+### Phase 2: Core Features (In Progress)
+- [x] Subscription system foundation
+- [ ] Payment processing
+- [ ] Rental management
+- [ ] User dashboard
+
+### Phase 3: Enhancement (Planned)
+- [ ] Email notifications
+- [ ] Advanced search
+- [ ] User reviews
+- [ ] Analytics dashboard
+
+### Phase 4: Production (Planned)
+- [ ] Performance optimization
+- [ ] Security hardening
+- [ ] Deployment configuration
+- [ ] Monitoring setup
+
+## Quality Assurance
+
+### Testing Strategy
+- **Unit Testing**: Django test framework
+- **Integration Testing**: End-to-end workflows
+- **Frontend Testing**: Cross-browser compatibility
+- **Security Testing**: Authentication and authorization
+
+### Code Standards
+- **PEP 8**: Python coding standards
+- **Django Best Practices**: Framework guidelines
+- **Documentation**: Comprehensive code comments
+- **Version Control**: Git workflow management
+
+## Deployment Strategy
+
+### Development Environment
+- **Local Development**: Django development server
+- **Version Control**: Git with feature branches
+- **Database**: SQLite for development
+
+### Production Environment
+- **Hosting**: Heroku platform
+- **Database**: PostgreSQL
+- **Media Storage**: Cloudinary
+- **Static Files**: Whitenoise
+
+## Success Metrics
+- **User Experience**: Intuitive navigation and design
+- **Performance**: Fast page load times
+- **Security**: Secure payment processing
+- **Scalability**: Handle multiple concurrent users

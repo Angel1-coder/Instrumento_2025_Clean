@@ -1,47 +1,51 @@
-# Instrumento_ - Agile Development Backlog
+# Instrumento - Agile Development Backlog
 
-## Projektübersicht
-**Ziel**: Vollständige Implementierung des Instrumento-Projekts
-**Deadline**: 19. August 2025 (irische Zeit)
-**Methode**: Agile mit 2-3 Tagen Sprints
+## Project Overview
+Instrumento is a modern instrument rental subscription platform built with Django, offering flexible rental plans for musicians of all levels.
 
-## Sprint 1 (16. August 2025) - Development Planning
-### ✅ Abgeschlossen
-- [x] Agile-Projektstruktur aufsetzen
-- [x] Development Plan erstellen
-- [x] Sprint-Planung dokumentieren
+## Sprint Backlog
 
-### 🔄 In Bearbeitung
-- [ ] Subscription System implementieren
-- [ ] Email System funktionsfähig machen
-- [ ] User Profile Management
+### Sprint 3 - Core Features Implementation
+**Priority**: High
+**Estimated Effort**: 2-3 development sessions
 
-### 📋 Noch zu erledigen
-- [ ] SEO Implementation
-- [ ] Responsiveness Testing
-- [ ] Final Testing
+#### Features
+- [x] Subscription system foundation
+- [ ] Stripe payment integration
+- [ ] Email confirmation system
+- [ ] User rental management interface
 
-## Sprint 2 (17.-18. August 2025) - Core Features
-### 📋 Geplant
-- [ ] Subscription System implementieren
-- [ ] Email System funktionsfähig machen
-- [ ] User Profile Management
-- [ ] Product Admin Interface
+#### Technical Tasks
+- [x] Subscription views and URLs
+- [x] Rental order management
+- [x] Admin interface for subscription models
+- [ ] Payment processing implementation
+- [ ] Email template system
 
-## Sprint 3 (19. August 2025) - Finalisierung
-### 📋 Geplant
-- [ ] SEO Implementation
-- [ ] Responsiveness Testing
-- [ ] Final Testing
-- [ ] Deployment Preparation
+### Sprint 4 - Finalization & Testing
+**Priority**: Medium
+**Estimated Effort**: 1-2 development sessions
 
-## Prioritäten
-1. **Hoch**: Core Funktionalität (Models, Auth, Shopping)
-2. **Mittel**: Subscription System, Email
-3. **Niedrig**: SEO, UI Polish
+#### Features
+- [ ] SEO optimization
+- [ ] Responsive design testing
+- [ ] Performance optimization
+- [ ] Deployment preparation
+
+#### Technical Tasks
+- [ ] Meta tags implementation
+- [ ] CSS validation and fixes
+- [ ] Cross-browser testing
+- [ ] Database optimization
+
+## Development Standards
+- **Code Quality**: Follow Django best practices
+- **Testing**: Unit tests for all new features
+- **Documentation**: Update README with new features
+- **Security**: Implement proper user authentication
 
 ## Definition of Done
-- [ ] Feature funktioniert lokal
-- [ ] Tests bestanden
-- [ ] Code review abgeschlossen
-- [ ] Dokumentation aktualisiert
+- [ ] Feature implemented and tested
+- [ ] Code reviewed and documented
+- [ ] Admin interface updated
+- [ ] User acceptance testing completed
