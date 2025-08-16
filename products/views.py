@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.db.models.functions import Lower
 
-from .models import Product, Category
+from .models import Product, Category, SubscriptionPlan, RentalOrder, InsuranceOption
 from .forms import ProductForm
 
 # Create your views here.
@@ -143,3 +143,73 @@ def delete_product(request, product_id):
     product.delete()
     messages.success(request, 'Product deleted!')
     return redirect(reverse('products'))
+
+
+@login_required
+def subscription_plans(request):
+    """View to show all available subscription plans"""
+    plans = SubscriptionPlan.objects.filter(is_active=True).order_by('duration_months')
+    
+    context = {
+        'plans': plans,
+    }
+    return render(request, 'products/subscription_plans.html', context)
+
+
+@login_required
+def rental_checkout(request, product_id, plan_id):
+    """View for rental checkout with subscription plan"""
+    product = get_object_or_404(Product, pk=product_id)
+    plan = get_object_or_404(SubscriptionPlan, pk=plan_id)
+    insurance_options = InsuranceOption.objects.filter(is_active=True)
+    
+    if request.method == 'POST':
+        # Handle rental order creation
+        insurance_type = request.POST.get('insurance_type', 'none')
+        insurance_option = None
+        
+        if insurance_type != 'none':
+            insurance_option = get_object_or_404(InsuranceOption, name=insurance_type)
+        
+        # Create rental order
+        rental_order = RentalOrder.objects.create(
+            user=request.user,
+            product=product,
+            rental_duration=plan.duration_months,
+            monthly_price=plan.monthly_price,
+            total_price=plan.total_price,
+            insurance_type=insurance_type,
+            insurance_cost=insurance_option.monthly_cost * plan.duration_months if insurance_option else 0,
+        )
+        
+        messages.success(request, f'Rental order created successfully! Order #{rental_order.order_number}')
+        return redirect('rental_success', rental_order.order_number)
+    
+    context = {
+        'product': product,
+        'plan': plan,
+        'insurance_options': insurance_options,
+    }
+    return render(request, 'products/rental_checkout.html', context)
+
+
+@login_required
+def rental_success(request, order_number):
+    """View for successful rental orders"""
+    rental_order = get_object_or_404(RentalOrder, order_number=order_number, user=request.user)
+    
+    context = {
+        'rental_order': rental_order,
+    }
+    return render(request, 'products/rental_success.html', context)
+
+
+@login_required
+def my_rentals(request):
+    """View for users to see their rental history"""
+    rental_orders = RentalOrder.objects.filter(user=request.user).order_by('-created_at')
+    
+    context = {
+        'rental_orders': rental_orders,
+    }
+    return render(request, 'products/my_rentals.html', context)

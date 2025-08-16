@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_header %}
+    <div class="container header-container">
+        <div class="row">
+            <div class="col"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="overlay"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col text-center mt-3">
+                <h2 class="logo-font">Subscription Plans</h2>
+                <hr class="w-50 mb-1">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-8 offset-md-2">
+                <div class="row">
+                    {% for plan in plans %}
+                        <div class="col-12 col-md-6 col-lg-3 mb-4">
+                            <div class="card h-100 {% if plan.is_popular %}border-primary{% endif %}">
+                                {% if plan.is_popular %}
+                                    <div class="card-header bg-primary text-white text-center">
+                                        <strong>Most Popular</strong>
+                                    </div>
+                                {% endif %}
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">{{ plan.name }}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">{{ plan.duration_months }} Months</h6>
+                                    <div class="pricing mb-3">
+                                        <span class="h3">€{{ plan.monthly_price }}</span>
+                                        <small class="text-muted">/month</small>
+                                        <br>
+                                        <small class="text-muted">Total: €{{ plan.total_price }}</small>
+                                    </div>
+                                    {% if plan.discount_percentage > 0 %}
+                                        <div class="alert alert-success">
+                                            <strong>{{ plan.discount_percentage }}% OFF</strong>
+                                        </div>
+                                    {% endif %}
+                                    <p class="card-text">{{ plan.description }}</p>
+                                    <div class="features mb-3">
+                                        <small class="text-muted">{{ plan.features }}</small>
+                                    </div>
+                                    <a href="{% url 'products' %}" class="btn btn-primary">
+                                        Choose Instruments
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="col-12 text-center">
+                            <p>No subscription plans available at the moment.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
