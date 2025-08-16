@@ -1,1 +1,1 @@
-Boutique Ado Confirmation for Order Number {{ order.order_number }}
+Thank you for your order! Order #{{ order.order_number }}

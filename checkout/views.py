@@ -18,32 +18,38 @@ import json
 
 @require_POST
 def cache_checkout_data(request):
+    """
+    Cache checkout data before payment confirmation
+    """
     try:
         pid = request.POST.get('client_secret').split('_secret')[0]
         stripe.api_key = settings.STRIPE_SECRET_KEY
         stripe.PaymentIntent.modify(pid, metadata={
             'bag': json.dumps(request.session.get('bag', {})),
             'save_info': request.POST.get('save_info'),
-            'username': request.user,
+            'username': request.user.username if request.user.is_authenticated else 'anonymous',
         })
         return HttpResponse(status=200)
     except Exception as e:
         messages.error(request, 'Sorry, your payment cannot be \
             processed right now. Please try again later.')
-        return HttpResponse(content=e, status=400)
+        return HttpResponse(content=str(e), status=400)
 
 
 def checkout(request):
-    # Simple Stripe check - either it works or we use dev mode
+    """
+    Handle checkout process with Stripe integration
+    """
+    # Get Stripe keys from settings
     stripe_public_key = settings.STRIPE_PUBLIC_KEY
     stripe_secret_key = settings.STRIPE_SECRET_KEY
     
-    # Check if we have real Stripe keys
+    # Check if we have valid Stripe keys
     if not stripe_public_key or 'your_stripe' in stripe_public_key or 'placeholder' in stripe_public_key:
-        # Dev mode - no Stripe
+        # Development mode - Stripe disabled
         stripe_public_key = None
         stripe_secret_key = None
-        messages.info(request, 'Test-Modus: Stripe deaktiviert')
+        messages.info(request, 'Development Mode: Stripe payments disabled')
     
     if request.method == 'POST':
         bag = request.session.get('bag', {})
@@ -63,18 +69,21 @@ def checkout(request):
         if order_form.is_valid():
             order = order_form.save(commit=False)
             
-            # Set Stripe PID based on mode
-            if stripe_public_key:
+            # Set Stripe PID based on payment mode
+            if stripe_public_key and stripe_secret_key:
                 try:
                     pid = request.POST.get('client_secret').split('_secret')[0]
                     order.stripe_pid = pid
-                except:
-                    order.stripe_pid = 'stripe_error_pid'
+                except Exception as e:
+                    order.stripe_pid = f'stripe_error_{str(e)[:20]}'
+                    messages.warning(request, 'Payment ID could not be retrieved')
             else:
                 order.stripe_pid = 'dev_test_pid_123'
                 
             order.original_bag = json.dumps(bag)
             order.save()
+            
+            # Create order line items
             for item_id, item_data in bag.items():
                 try:
                     product = Product.objects.get(id=item_id)
@@ -120,25 +129,30 @@ def checkout(request):
         current_bag = bag_contents(request)
         total = current_bag['grand_total']
         
-        # Create Stripe intent only if we have real keys
+        # Create Stripe PaymentIntent if we have valid keys
         if stripe_public_key and stripe_secret_key:
             try:
-                stripe_total = round(total * 100)
+                stripe_total = round(total * 100)  # Convert to cents
                 stripe.api_key = stripe_secret_key
                 intent = stripe.PaymentIntent.create(
                     amount=stripe_total,
                     currency=settings.STRIPE_CURRENCY,
+                    metadata={
+                        'bag': json.dumps(bag),
+                        'username': request.user.username if request.user.is_authenticated else 'anonymous',
+                    }
                 )
             except Exception as e:
-                # Stripe failed - fallback to dev mode
+                # Stripe failed - fallback to development mode
                 stripe_public_key = None
                 stripe_secret_key = None
                 intent = {'client_secret': 'dev_test_secret_123'}
-                messages.warning(request, 'Stripe-Fehler - Test-Modus aktiviert')
+                messages.warning(request, 'Stripe Error - Development mode activated')
         else:
-            # Dev mode
+            # Development mode
             intent = {'client_secret': 'dev_test_secret_123'}
 
+        # Pre-fill form with user profile data if authenticated
         if request.user.is_authenticated:
             try:
                 profile = UserProfile.objects.get(user=request.user)
@@ -146,7 +160,7 @@ def checkout(request):
                     'full_name': profile.user.get_full_name(),
                     'email': profile.user.email,
                     'phone_number': profile.default_phone_number,
-                    'country': profile.default_county,
+                    'country': profile.default_country,
                     'postcode': profile.default_postcode,
                     'town_or_city': profile.default_town_or_city,
                     'street_address1': profile.default_street_address1,
@@ -181,7 +195,7 @@ def checkout(request):
 
 def checkout_success(request, order_number):
     """
-    Handle successful checkouts
+    Handle successful checkouts and send confirmation emails
     """
     save_info = request.session.get('save_info')
     order = get_object_or_404(Order, order_number=order_number)
@@ -192,7 +206,7 @@ def checkout_success(request, order_number):
         order.user_profile = profile
         order.save()
 
-        # Save the user's info
+        # Save the user's info if requested
         if save_info:
             profile_data = {
                 'default_phone_number': order.phone_number,
@@ -211,6 +225,7 @@ def checkout_success(request, order_number):
         Your order number is {order_number}. A confirmation \
         email will be sent to {order.email}.')
 
+    # Clear the bag from session
     if 'bag' in request.session:
         del request.session['bag']
 

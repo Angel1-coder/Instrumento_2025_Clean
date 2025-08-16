@@ -1,162 +1,105 @@
 from django.contrib import admin
-from .models import Category, InstrumentType, Product, Accessory, SubscriptionPlan, InsuranceOption, RentalOrder
+from .models import Category, Product, SubscriptionPlan, RentalSubscription, RentalItem, LessonBooking
 
 
-class InstrumentTypeInline(admin.TabularInline):
-    model = InstrumentType
-    extra = 1
-    fields = ('name', 'description', 'image', 'display_order', 'is_active')
-
-
-@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'friendly_name', 'display_order', 'is_active')
-    list_editable = ('display_order', 'is_active')
-    list_filter = ('is_active',)
+    list_display = ('name', 'friendly_name')
+    list_editable = ('friendly_name',)
     search_fields = ('name', 'friendly_name')
-    inlines = [InstrumentTypeInline]
-    fieldsets = (
-        ('Basic Information', {
-            'fields': ('name', 'friendly_name', 'description')
-        }),
-        ('Display Settings', {
-            'fields': ('icon', 'display_order', 'is_active')
-        }),
-    )
-
-
-@admin.register(InstrumentType)
-class InstrumentTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'display_order', 'is_active')
-    list_editable = ('display_order', 'is_active')
-    list_filter = ('category', 'is_active')
-    search_fields = ('name', 'category__name')
-    ordering = ('category', 'display_order')
-
-
-@admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
-    list_display = [
-        'name', 'category', 'instrument_type', 'brand', 'model',
-        'rental_price_6months', 'purchase_price', 'stock_quantity', 'is_active'
-    ]
-    list_editable = ['is_active', 'stock_quantity']
-    list_filter = ['category', 'instrument_type', 'is_rental_available', 'is_purchase_available', 'is_active']
-    search_fields = ['name', 'brand', 'model', 'description']
-    ordering = ['name']
-    
-    fieldsets = (
-        ('Basic Information', {
-            'fields': ('name', 'description', 'long_description', 'category', 'instrument_type')
-        }),
-        ('Product Details', {
-            'fields': ('brand', 'model', 'condition', 'year_made', 'stock_quantity')
-        }),
-        ('Rental Pricing', {
-            'fields': (
-                'rental_price_3months', 'rental_price_6months', 
-                'rental_price_12months', 'rental_price_24months',
-                'is_rental_available'
-            )
-        }),
-        ('Purchase & Insurance', {
-            'fields': (
-                'purchase_price', 'is_purchase_available',
-                'basic_insurance_monthly', 'premium_insurance_monthly'
-            )
-        }),
-        ('Student Benefits', {
-            'fields': ('student_discount_percentage',)
-        }),
-        ('Media & Content', {
-            'fields': ('image', 'image_url', 'sound_sample_url', 'video_url')
-        }),
-        ('Status', {
-            'fields': ('is_active', 'created_at', 'updated_at')
-        })
-    )
-    
-    readonly_fields = ('created_at', 'updated_at')
-
-
-@admin.register(Accessory)
-class AccessoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'price', 'stock_quantity', 'is_active')
-    list_editable = ('price', 'stock_quantity', 'is_active')
-    list_filter = ('category', 'is_active')
-    search_fields = ('name', 'description')
-    ordering = ('category', 'name')
-
-
-@admin.register(SubscriptionPlan)
-class SubscriptionPlanAdmin(admin.ModelAdmin):
-    list_display = ('name', 'duration_months', 'monthly_price', 'total_price', 
-                   'discount_percentage', 'is_popular', 'is_active')
-    list_editable = ('monthly_price', 'discount_percentage', 'is_popular', 'is_active')
-    list_filter = ('duration_months', 'is_popular', 'is_active')
-    search_fields = ('name', 'description')
-    ordering = ('duration_months',)
-    
-    fieldsets = (
-        ('Basic Information', {
-            'fields': ('name', 'duration_months', 'description')
-        }),
-        ('Pricing', {
-            'fields': ('monthly_price', 'discount_percentage')
-        }),
-        ('Features', {
-            'fields': ('features', 'is_popular', 'is_active')
-        }),
-    )
-
-
-@admin.register(InsuranceOption)
-class InsuranceOptionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'monthly_cost', 'coverage_amount', 'deductible', 'is_active')
-    list_editable = ('monthly_cost', 'coverage_amount', 'deductible', 'is_active')
-    list_filter = ('is_active',)
-    search_fields = ('name', 'description')
     ordering = ('name',)
 
 
-@admin.register(RentalOrder)
-class RentalOrderAdmin(admin.ModelAdmin):
-    list_display = [
-        'order_number', 'user', 'product', 'rental_duration', 
-        'monthly_price', 'total_price', 'status', 'created_at'
-    ]
-    list_filter = ['status', 'rental_duration', 'insurance_type', 'created_at']
-    search_fields = ['order_number', 'user__username', 'product__name']
-    ordering = ['-created_at']
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('name', 'category', 'price', 'available_for_rental', 'available_for_purchase', 'stock_quantity', 'condition')
+    list_filter = ('category', 'available_for_rental', 'available_for_purchase', 'condition')
+    search_fields = ('name', 'description', 'sku')
+    list_editable = ('price', 'available_for_rental', 'available_for_purchase', 'stock_quantity', 'condition')
+    ordering = ('name',)
     
     fieldsets = (
-        ('Order Information', {
-            'fields': ('order_number', 'user', 'product', 'status')
-        }),
-        ('Rental Details', {
-            'fields': ('rental_duration', 'start_date', 'end_date')
+        ('Basic Information', {
+            'fields': ('name', 'category', 'sku', 'description', 'image', 'image_url')
         }),
         ('Pricing', {
-            'fields': (
-                'monthly_price', 'total_price', 'student_discount_applied', 
-                'discount_amount'
-            )
+            'fields': ('price', 'rental_price_3_months', 'rental_price_6_months', 'rental_price_12_months', 'rental_price_24_months')
         }),
-        ('Insurance & Services', {
-            'fields': ('insurance_type', 'insurance_cost', 'includes_lessons', 'lesson_cost')
+        ('Availability', {
+            'fields': ('available_for_rental', 'available_for_purchase', 'stock_quantity')
         }),
-        ('Dates', {
-            'fields': ('created_at', 'updated_at')
+        ('Condition & Status', {
+            'fields': ('condition', 'created_at', 'updated_at')
         }),
-        ('Notes', {
-            'fields': ('notes',)
-        })
     )
+    readonly_fields = ('created_at', 'updated_at')
+
+
+class SubscriptionPlanAdmin(admin.ModelAdmin):
+    list_display = ('name', 'duration_months', 'monthly_price', 'setup_fee', 'insurance_included', 'lessons_included', 'max_instruments', 'is_active')
+    list_filter = ('duration_months', 'insurance_included', 'lessons_included', 'is_active')
+    list_editable = ('monthly_price', 'setup_fee', 'insurance_included', 'lessons_included', 'max_instruments', 'is_active')
+    search_fields = ('name', 'description')
+    ordering = ('duration_months',)
+
+
+class RentalItemInline(admin.TabularInline):
+    model = RentalItem
+    extra = 0
+    readonly_fields = ('created_at',)
+    fields = ('product', 'rental_start', 'rental_end', 'monthly_rental_price', 'insurance_coverage', 'returned')
+
+
+class LessonBookingInline(admin.TabularInline):
+    model = LessonBooking
+    extra = 0
+    readonly_fields = ('created_at',)
+    fields = ('instructor_name', 'lesson_date', 'duration_minutes', 'lesson_type', 'status')
+
+
+class RentalSubscriptionAdmin(admin.ModelAdmin):
+    list_display = ('user', 'plan', 'start_date', 'end_date', 'status', 'total_cost', 'monthly_payment', 'insurance_opted')
+    list_filter = ('status', 'plan', 'insurance_opted', 'start_date')
+    search_fields = ('user__username', 'user__email', 'plan__name')
+    list_editable = ('status',)
+    readonly_fields = ('created_at', 'updated_at')
     
-    readonly_fields = ('order_number', 'created_at', 'updated_at')
+    inlines = [RentalItemInline, LessonBookingInline]
     
-    def get_queryset(self, request):
-        return super().get_queryset(request).select_related('user', 'product')
+    fieldsets = (
+        ('Subscription Details', {
+            'fields': ('user', 'plan', 'start_date', 'end_date', 'status')
+        }),
+        ('Financial Information', {
+            'fields': ('total_cost', 'monthly_payment', 'setup_fee_paid', 'insurance_opted', 'insurance_cost')
+        }),
+        ('Additional Information', {
+            'fields': ('notes', 'created_at', 'updated_at')
+        }),
+    )
+
+
+class RentalItemAdmin(admin.ModelAdmin):
+    list_display = ('product', 'subscription', 'rental_start', 'rental_end', 'monthly_rental_price', 'insurance_coverage', 'returned')
+    list_filter = ('insurance_coverage', 'returned', 'rental_start', 'rental_end')
+    search_fields = ('product__name', 'subscription__user__username')
+    list_editable = ('monthly_rental_price', 'insurance_coverage', 'returned')
+    readonly_fields = ('created_at',)
+
+
+class LessonBookingAdmin(admin.ModelAdmin):
+    list_display = ('subscription', 'instructor_name', 'lesson_date', 'duration_minutes', 'lesson_type', 'status')
+    list_filter = ('status', 'lesson_type', 'lesson_date')
+    search_fields = ('subscription__user__username', 'instructor_name')
+    list_editable = ('status', 'lesson_date', 'duration_minutes')
+    readonly_fields = ('created_at',)
+
+
+# Register models
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(Product, ProductAdmin)
+admin.site.register(SubscriptionPlan, SubscriptionPlanAdmin)
+admin.site.register(RentalSubscription, RentalSubscriptionAdmin)
+admin.site.register(RentalItem, RentalItemAdmin)
+admin.site.register(LessonBooking, LessonBookingAdmin)
 
 
 
