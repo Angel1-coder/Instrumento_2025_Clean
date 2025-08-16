@@ -1,0 +1,5 @@
+[33ma28baaa[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m feat: Add initial template for the products page
+[33m37510c0[m feat: display products on homepage
+[33mbc52c9e[m customized admin
+[33m450c08c[m Added Product and Category models to Django admin
+[33m7182472[m feat: Add main site navigation and mobile header components

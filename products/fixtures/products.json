@@ -1,0 +1,87 @@
+[
+    {
+        "pk": 1,
+        "model": "products.product",
+        "fields": {
+            "category": 1,
+            "sku": "GUIT-001",
+            "name": "Classical Guitar",
+            "description": "Beautiful classical guitar with nylon strings, perfect for beginners and classical music enthusiasts.",
+            "price": 299.99,
+            "rating": 4.5,
+            "image_url": "",
+            "image": "",
+            "has_sizes": false,
+            "rental_price": 25.00,
+            "is_rental": true
+        }
+    },
+    {
+        "pk": 2,
+        "model": "products.product",
+        "fields": {
+            "category": 1,
+            "sku": "VIOL-001",
+            "name": "Student Violin",
+            "description": "High-quality student violin with case and bow, ideal for music students.",
+            "price": 199.99,
+            "rating": 4.3,
+            "image_url": "",
+            "image": "",
+            "has_sizes": false,
+            "rental_price": 20.00,
+            "is_rental": true
+        }
+    },
+    {
+        "pk": 3,
+        "model": "products.product",
+        "fields": {
+            "category": 2,
+            "sku": "FLUT-001",
+            "name": "Beginner Flute",
+            "description": "Professional beginner flute with silver-plated keys, perfect for starting musicians.",
+            "price": 399.99,
+            "rating": 4.7,
+            "image_url": "",
+            "image": "",
+            "has_sizes": false,
+            "rental_price": 30.00,
+            "is_rental": true
+        }
+    },
+    {
+        "pk": 4,
+        "model": "products.product",
+        "fields": {
+            "category": 3,
+            "sku": "DRUM-001",
+            "name": "Acoustic Drum Set",
+            "description": "Complete 5-piece drum set with cymbals and hardware, great for rock and jazz.",
+            "price": 599.99,
+            "rating": 4.6,
+            "image_url": "",
+            "image": "",
+            "has_sizes": false,
+            "rental_price": 45.00,
+            "is_rental": true
+        }
+    },
+    {
+        "pk": 5,
+        "model": "products.product",
+        "fields": {
+            "category": 4,
+            "sku": "PIAN-001",
+            "name": "Digital Piano",
+            "description": "88-key weighted digital piano with realistic sound and touch response.",
+            "price": 899.99,
+            "rating": 4.8,
+            "image_url": "",
+            "image": "",
+            "has_sizes": false,
+            "rental_price": 60.00,
+            "is_rental": true
+        }
+    }
+]

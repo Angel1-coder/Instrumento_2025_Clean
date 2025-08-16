@@ -1,0 +1,37 @@
+<div class="collapse navbar-collapse" id="main-nav">
+    <ul class="navbar-nav w-auto mx-auto">
+        <li class="nav-item d-block d-md-none">
+            <a class="logo-font font-weight-bold nav-link text-black mr-5" href="{% url 'home' %}" id="home-link">
+                Home
+            </a>
+        </li>
+        
+        <!-- All Instruments -->
+        <li class="nav-item">
+            <a class="logo-font font-weight-bold nav-link text-black mr-5" href="{% url 'products' %}">
+                All Instruments
+            </a>
+        </li>
+
+        <!-- Rent -->
+        <li class="nav-item">
+            <a class="logo-font font-weight-bold nav-link text-black mr-5" href="{% url 'products' %}?rental=true">
+                Rent
+            </a>
+        </li>
+
+        <!-- Accessories -->
+        <li class="nav-item">
+            <a class="logo-font font-weight-bold nav-link text-black mr-5" href="#accessories">
+                Accessories
+            </a>
+        </li>
+
+        <!-- Special Offers -->
+        <li class="nav-item">
+            <a class="logo-font font-weight-bold nav-link text-black" href="#">
+                Special Offers
+            </a>
+        </li>
+    </ul>
+</div>

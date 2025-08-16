@@ -1,0 +1,9 @@
+[
+    { "pk": 1, "model": "products.category", "fields": { "name": "string_instruments", "friendly_name": "String Instruments" } },
+    { "pk": 2, "model": "products.category", "fields": { "name": "wind_instruments", "friendly_name": "Wind Instruments" } },
+    { "pk": 3, "model": "products.category", "fields": { "name": "percussion", "friendly_name": "Percussion" } },
+    { "pk": 4, "model": "products.category", "fields": { "name": "keyboards", "friendly_name": "Keyboards" } },
+    { "pk": 5, "model": "products.category", "fields": { "name": "accessories", "friendly_name": "Accessories" } },
+    { "pk": 6, "model": "products.category", "fields": { "name": "rental", "friendly_name": "Rental Instruments" } },
+    { "pk": 7, "model": "products.category", "fields": { "name": "maintenance", "friendly_name": "Maintenance & Repair" } }
+]
