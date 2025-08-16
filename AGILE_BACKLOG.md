@@ -5,6 +5,38 @@ Instrumento is a modern instrument rental subscription platform built with Djang
 
 ## Sprint Backlog
 
+### Sprint 1 - Project Foundation ✅ COMPLETED
+**Priority**: High
+**Estimated Effort**: 1-2 development sessions
+
+#### Features
+- [x] Django project setup and configuration
+- [x] Core project structure implementation
+- [x] Basic authentication system setup
+- [x] Initial database models
+
+#### Technical Tasks
+- [x] Project initialization and settings
+- [x] Basic app structure (home, products, bag)
+- [x] User authentication foundation
+- [x] Core templates and navigation
+
+### Sprint 2 - Core Infrastructure ✅ COMPLETED
+**Priority**: High
+**Estimated Effort**: 2-3 development sessions
+
+#### Features
+- [x] Shopping cart functionality
+- [x] Basic checkout system
+- [x] Product management interface
+- [x] User profile system
+
+#### Technical Tasks
+- [x] Shopping bag implementation
+- [x] Checkout models and forms
+- [x] Product catalog and views
+- [x] User profile management
+
 ### Sprint 3 - Core Features Implementation ✅ COMPLETED
 **Priority**: High
 **Estimated Effort**: 2-3 development sessions
