@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_header %}
+<div class="container header-container">
+    <div class="row">
+        <div class="col"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">Rental Checkout</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Product Details -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Product Details</h4>
+                </div>
+                <div class="card-body">
+                    <h5>{{ product.name }}</h5>
+                    <p class="text-muted">{{ product.description|truncatewords:30 }}</p>
+                    <p><strong>Purchase Price:</strong> ${{ product.price }}</p>
+                    <p><strong>Condition:</strong> {{ product.condition|title }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subscription Plan -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Subscription Plan</h4>
+                </div>
+                <div class="card-body">
+                    <h5>{{ plan.name }}</h5>
+                    <p><strong>Duration:</strong> {{ plan.duration_months }} months</p>
+                    <p><strong>Monthly Price:</strong> ${{ plan.monthly_price }}</p>
+                    <p><strong>Setup Fee:</strong> ${{ plan.setup_fee }}</p>
+                    <p><strong>Total Cost:</strong> ${{ plan.get_total_cost }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rental Form -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Complete Your Rental</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <!-- Insurance Options -->
+                        <div class="form-group">
+                            <label for="insurance_type"><strong>Insurance Coverage:</strong></label>
+                            <select class="form-control" id="insurance_type" name="insurance_type">
+                                <option value="none">No Insurance</option>
+                                {% for option in insurance_options %}
+                                <option value="{{ option.name }}">{{ option.name }} - ${{ option.monthly_cost }}/month</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Student Discount -->
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="checkbox" id="student_discount" name="student_discount">
+                            <label class="form-check-label" for="student_discount">
+                                I'm a student (10% discount)
+                            </label>
+                        </div>
+
+                        <!-- Terms and Conditions -->
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="checkbox" id="terms_accepted" name="terms_accepted" required>
+                            <label class="form-check-label" for="terms_accepted">
+                                I accept the <a href="#" target="_blank">Terms and Conditions</a>
+                            </label>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                Complete Rental - ${{ plan.get_total_cost }}
+                            </button>
+                            <a href="{% url 'products' %}" class="btn btn-secondary ml-2">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

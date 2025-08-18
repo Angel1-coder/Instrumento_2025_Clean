@@ -17,4 +17,5 @@ urlpatterns = [
     path('rental-success/<str:order_number>/', 
          views.rental_success, name='rental_success'),
     path('my-rentals/', views.my_rentals, name='my_rentals'),
+    path('rental-instruments/', views.rental_instruments, name='rental_instruments'),
 ]

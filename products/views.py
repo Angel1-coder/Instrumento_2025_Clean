@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.db.models.functions import Lower
 
-from .models import Product, Category, SubscriptionPlan, RentalOrder, InsuranceOption
+from .models import Product, Category, SubscriptionPlan, RentalItem, RentalSubscription, InsuranceOption
 from .forms import ProductForm
 
 # Create your views here.
@@ -164,26 +164,45 @@ def rental_checkout(request, product_id, plan_id):
     insurance_options = InsuranceOption.objects.filter(is_active=True)
     
     if request.method == 'POST':
-        # Handle rental order creation
+        # Handle rental subscription creation
         insurance_type = request.POST.get('insurance_type', 'none')
         insurance_option = None
         
         if insurance_type != 'none':
             insurance_option = get_object_or_404(InsuranceOption, name=insurance_type)
         
-        # Create rental order
-        rental_order = RentalOrder.objects.create(
+        # Create rental subscription
+        from django.utils import timezone
+        from datetime import timedelta
+        
+        start_date = timezone.now().date()
+        end_date = start_date + timedelta(days=plan.duration_months * 30)
+        
+        subscription = RentalSubscription.objects.create(
             user=request.user,
-            product=product,
-            rental_duration=plan.duration_months,
-            monthly_price=plan.monthly_price,
-            total_price=plan.total_price,
-            insurance_type=insurance_type,
+            plan=plan,
+            start_date=start_date,
+            end_date=end_date,
+            total_cost=plan.get_total_cost(),
+            monthly_payment=plan.monthly_price,
+            insurance_opted=insurance_type != 'none',
             insurance_cost=insurance_option.monthly_cost * plan.duration_months if insurance_option else 0,
         )
         
-        messages.success(request, f'Rental order created successfully! Order #{rental_order.order_number}')
-        return redirect('rental_success', rental_order.order_number)
+        # Create rental item
+        rental_item = RentalItem.objects.create(
+            subscription=subscription,
+            product=product,
+            rental_start=start_date,
+            rental_end=end_date,
+            monthly_rental_price=plan.monthly_price,
+            insurance_coverage=insurance_type != 'none',
+            insurance_cost=insurance_option.monthly_cost if insurance_option else 0,
+            condition_at_start=product.condition,
+        )
+        
+        messages.success(request, f'Rental subscription created successfully! Subscription #{subscription.id}')
+        return redirect('rental_success', subscription.id)
     
     context = {
         'product': product,
@@ -194,12 +213,12 @@ def rental_checkout(request, product_id, plan_id):
 
 
 @login_required
-def rental_success(request, order_number):
-    """View for successful rental orders"""
-    rental_order = get_object_or_404(RentalOrder, order_number=order_number, user=request.user)
+def rental_success(request, subscription_id):
+    """View for successful rental subscriptions"""
+    subscription = get_object_or_404(RentalSubscription, pk=subscription_id, user=request.user)
     
     context = {
-        'rental_order': rental_order,
+        'subscription': subscription,
     }
     return render(request, 'products/rental_success.html', context)
 
@@ -207,9 +226,20 @@ def rental_success(request, order_number):
 @login_required
 def my_rentals(request):
     """View for users to see their rental history"""
-    rental_orders = RentalOrder.objects.filter(user=request.user).order_by('-created_at')
+    subscriptions = RentalSubscription.objects.filter(user=request.user).order_by('-created_at')
     
     context = {
-        'rental_orders': rental_orders,
+        'subscriptions': subscriptions,
     }
     return render(request, 'products/my_rentals.html', context)
+
+
+def rental_instruments(request):
+    """View for rental instruments overview - similar to all_products"""
+    products = Product.objects.filter(available_for_rental=True).order_by('name')
+    
+    context = {
+        'products': products,
+    }
+    return render(request, 'products/rental_instruments.html', context)
+

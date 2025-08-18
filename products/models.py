@@ -96,6 +96,21 @@ class SubscriptionPlan(models.Model):
         return (self.monthly_price * self.duration_months) + self.setup_fee
 
 
+class InsuranceOption(models.Model):
+    """
+    Insurance options for instrument rentals
+    """
+    name = models.CharField(max_length=254)
+    description = models.TextField()
+    monthly_cost = models.DecimalField(max_digits=8, decimal_places=2)
+    coverage_amount = models.DecimalField(max_digits=8, decimal_places=2)
+    deductible = models.DecimalField(max_digits=8, decimal_places=2)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+
 class RentalSubscription(models.Model):
     """
     Active rental subscription for users
