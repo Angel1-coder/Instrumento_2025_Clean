@@ -22,7 +22,7 @@
         <div class="col-12 col-md-6 order-md-last">
             <div class="sort-select-wrapper w-50 ml-auto">
                 <select id="sort-selector" class="custom-select custom-select-sm rounded-0 border border-{% if current_sorting != 'None_None' %}info{% else %}black{% endif %}">
-                    <option value="reset" {% if current_sorting == 'None_None' %}selected{% endif %}>Sort by...</option>
+                    <option value="reset" {% if current_sorting != 'None_None' %}selected{% endif %}>Sort by...</option>
                     <option value="price_asc" {% if current_sorting == 'price_0' %}selected{% endif %}>Price (low to high)</option>
                     <option value="price_desc" {% if current_sorting == 'price_1' %}selected{% endif %}>Price (high to low)</option>
                     <option value="rating_asc" {% if current_sorting == 'rating_0' %}selected{% endif %}>Rating (low to high)</option>
@@ -58,41 +58,89 @@
             </div>
             <div class="row">
                 {% for product in products %}
-                <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                    <div class="card h-100 border-0">
+                <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
                         {% if product.image %}
                         <a href="{% url 'product_detail' product.id %}">
                             <img class="card-img-top img-fluid" src="{{ product.image.url }}" alt="{{ product.name }}">
                         </a>
                         {% else %}
                         <a href="{% url 'product_detail' product.id %}">
-                            <img class="card-img-top img-fluid" src="{{ MEDIA_URL }}noimage.png" alt="{{ product.name }}">
+                            <img class="card-img-top img-fluid" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="{{ product.name }}">
                         </a>
                         {% endif %}
                         <div class="card-body pb-0">
-                            <p class="mb-0">{{ product.name }}</p>
+                            <h6 class="card-title mb-1">{{ product.name }}</h6>
+                            {% if product.category %}
+                            <p class="text-muted small mb-1">
+                                <i class="fas fa-tag mr-1"></i>{{ product.category.friendly_name }}
+                            </p>
+                            {% endif %}
+                            {% if product.rating %}
+                            <small class="text-muted">
+                                <i class="fas fa-star mr-1"></i>{{ product.rating }} / 5
+                            </small>
+                            {% endif %}
                         </div>
-                        <div class="card-footer bg-white pt-0 border-0 text-left">
+                        <div class="card-footer bg-white pt-0 border-0">
                             <div class="row">
-                                <div class="col">
-                                    <p class="lead mb-0 text-left font-weight-bold">${{ product.price }}</p>
-                                    {% if product.category %}
-                                    <p class="small mt-1 mb-0">
-                                        <a class="text-muted" href="{% url 'products' %}?category={{ product.category.name }}">
-                                            <i class="fas fa-tag mr-1"></i>{{ product.category.friendly_name }}
-                                        </a>
-                                    </p>
-                                    {% endif %}
-                                    {% if product.rating %}
-                                    <small class="text-muted"><i class="fas fa-star mr-1"></i>{{ product.rating }} / 5</small>
-                                    {% else %}
-                                    <small class="text-muted">No Rating</small>
-                                    {% endif %}
+                                <div class="col-12">
+                                    <!-- Main Rental Price (6 months as default) -->
+                                    <div class="text-center mb-3">
+                                        <h5 class="text-success font-weight-bold mb-1">
+                                            €{{ product.rental_price_6_months }}/month
+                                        </h5>
+                                        <small class="text-muted">6 months (Best Value)</small>
+                                    </div>
                                     
-                                    <!-- Simple Rental Info -->
-                                    <div class="mt-2">
-                                        <small class="text-primary">
-                                            <strong>Rental:</strong> ${{ product.rental_price_6_months }}/month (6m)
+                                    <!-- All Rental Options as Clickable Buttons -->
+                                    <div class="rental-options mb-3">
+                                        <div class="row">
+                                            <div class="col-6 mb-2">
+                                                <a href="{% url 'add_temp_to_bag' %}?plan=3&price={{ product.rental_price_3_months }}&type=rental&product_id={{ product.id }}" 
+                                                   class="btn btn-success btn-sm w-100 h-100 d-flex align-items-center justify-content-center">
+                                                    <div class="text-center">
+                                                        <div class="font-weight-bold">3 Months</div>
+                                                        <div class="small">€{{ product.rental_price_3_months }}/month</div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <a href="{% url 'add_temp_to_bag' %}?plan=6&price={{ product.rental_price_6_months }}&type=rental&product_id={{ product.id }}" 
+                                                   class="btn btn-success btn-sm w-100 h-100 d-flex align-items-center justify-content-center">
+                                                    <div class="text-center">
+                                                        <div class="font-weight-bold">6 Months</div>
+                                                        <div class="small">€{{ product.rental_price_6_months }}/month</div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6 mb-2">
+                                                <a href="{% url 'add_temp_to_bag' %}?plan=12&price={{ product.rental_price_12_months }}&type=rental&product_id={{ product.id }}" 
+                                                   class="btn btn-success btn-sm w-100 h-100 d-flex align-items-center justify-content-center">
+                                                    <div class="text-center">
+                                                        <div class="font-weight-bold">12 Months</div>
+                                                        <div class="small">€{{ product.rental_price_12_months }}/month</div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                <a href="{% url 'add_temp_to_bag' %}?plan=24&price={{ product.rental_price_24_months }}&type=rental&product_id={{ product.id }}" 
+                                                   class="btn btn-success btn-sm w-100 h-100 d-flex align-items-center justify-content-center">
+                                                    <div class="text-center">
+                                                        <div class="font-weight-bold">24 Months</div>
+                                                        <div class="small">€{{ product.rental_price_24_months }}/month</div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Purchase Price (smaller, secondary) -->
+                                    <div class="text-center mb-2">
+                                        <small class="text-muted">
+                                            Purchase: €{{ product.price }}
                                         </small>
                                     </div>
                                 </div>

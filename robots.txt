@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://instrumento.com/sitemap.xml
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /accounts/
+Disallow: /profile/
+Disallow: /checkout/
+Disallow: /bag/
+
+# Allow important pages
+Allow: /products/
+Allow: /products/rental-instruments/
+Allow: /products/subscription-plans/
+Allow: /products/special-offers/
+
+# Crawl delay (optional)
+Crawl-delay: 1
+
+
+

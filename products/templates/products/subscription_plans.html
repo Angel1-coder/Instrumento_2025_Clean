@@ -23,8 +23,8 @@
                 <div class="row">
                     {% for plan in plans %}
                         <div class="col-12 col-md-6 col-lg-3 mb-4">
-                            <div class="card h-100 {% if plan.is_popular %}border-primary{% endif %}">
-                                {% if plan.is_popular %}
+                            <div class="card h-100">
+                                {% if plan.duration_months == 6 %}
                                     <div class="card-header bg-primary text-white text-center">
                                         <strong>Most Popular</strong>
                                     </div>
@@ -36,16 +36,20 @@
                                         <span class="h3">€{{ plan.monthly_price }}</span>
                                         <small class="text-muted">/month</small>
                                         <br>
-                                        <small class="text-muted">Total: €{{ plan.total_price }}</small>
+                                        <small class="text-muted">Total: €{{ plan.get_total_cost }}</small>
                                     </div>
-                                    {% if plan.discount_percentage > 0 %}
-                                        <div class="alert alert-success">
-                                            <strong>{{ plan.discount_percentage }}% OFF</strong>
-                                        </div>
-                                    {% endif %}
                                     <p class="card-text">{{ plan.description }}</p>
                                     <div class="features mb-3">
-                                        <small class="text-muted">{{ plan.features }}</small>
+                                        <ul class="list-unstyled">
+                                            <li><i class="fas fa-check text-success"></i> {{ plan.duration_months }} months</li>
+                                            {% if plan.insurance_included %}
+                                                <li><i class="fas fa-check text-success"></i> Insurance included</li>
+                                            {% endif %}
+                                            {% if plan.lessons_included %}
+                                                <li><i class="fas fa-check text-success"></i> Lessons included</li>
+                                            {% endif %}
+                                            <li><i class="fas fa-check text-success"></i> Up to {{ plan.max_instruments }} instruments</li>
+                                        </ul>
                                     </div>
                                     <a href="{% url 'products' %}" class="btn btn-primary">
                                         Choose Instruments

@@ -1,0 +1,51 @@
+{% if breadcrumbs %}
+<nav aria-label="breadcrumb" class="breadcrumb-nav">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'home' %}">
+                    <i class="fas fa-home"></i> Home
+                </a>
+            </li>
+            {% for breadcrumb in breadcrumbs %}
+                {% if forloop.last %}
+                    <li class="breadcrumb-item active" aria-current="page">
+                        {{ breadcrumb.title }}
+                    </li>
+                {% else %}
+                    <li class="breadcrumb-item">
+                        <a href="{{ breadcrumb.url }}">{{ breadcrumb.title }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    </div>
+</nav>
+
+<!-- Schema.org BreadcrumbList -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'home' %}"
+        }
+        {% for breadcrumb in breadcrumbs %},
+        {
+            "@type": "ListItem",
+            "position": {{ forloop.counter|add:1 }},
+            "name": "{{ breadcrumb.title }}",
+            "item": "{{ request.scheme }}://{{ request.get_host }}{{ breadcrumb.url }}"
+        }
+        {% endfor %}
+    ]
+}
+</script>
+{% endif %}
+
+
+

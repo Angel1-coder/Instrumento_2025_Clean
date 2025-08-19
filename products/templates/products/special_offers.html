@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_header %}
+<div class="container header-container">
+    <div class="row">
+        <div class="col"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="overlay"></div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col text-center mt-3">
+            <h2 class="logo-font">Special Offers</h2>
+            <p class="text-muted">Exclusive deals and limited-time offers</p>
+            <hr class="w-50 mb-1">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-10 offset-1">
+            <!-- Main Special Offer -->
+            <div class="card border-0 shadow-lg special-offer-card mb-5">
+                <div class="row g-0">
+                    <div class="col-md-6">
+                        <img src="https://images.pexels.com/photos/17719293/pexels-photo-17719293.jpeg" 
+                             class="img-fluid rounded-start h-100" 
+                             alt="2x Cream Stratocaster 1964 with Marshall Origin Combo" 
+                             style="object-fit: cover; height: 400px;">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-body p-4">
+                            <div class="badge bg-danger mb-3">
+                                <i class="fas fa-fire me-2"></i>Limited Time Offer
+                            </div>
+                            <h3 class="card-title text-primary mb-3">
+                                <i class="fas fa-star text-warning me-2"></i>
+                                Legendary Package Deal
+                            </h3>
+                            <h4 class="card-subtitle mb-3">2x Cream Stratocaster 1964 + Marshall Origin Combo</h4>
+                            <p class="card-text mb-4">
+                                Get <strong>2x Fender Cream Stratocaster 1964</strong> guitars plus a <strong>Marshall Origin 50W Combo</strong> amplifier for the price of just one guitar! This legendary combination is perfect for studio recording and live performances.
+                            </p>
+                            
+                            <div class="offer-details mb-4">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h6 class="text-muted">What's Included:</h6>
+                                        <ul class="list-unstyled">
+                                            <li><i class="fas fa-check text-success me-2"></i>2x Fender Cream Stratocaster 1964</li>
+                                            <li><i class="fas fa-check text-success me-2"></i>Marshall Origin 50W Combo</li>
+                                            <li><i class="fas fa-check text-success me-2"></i>Premium Guitar Cables</li>
+                                            <li><i class="fas fa-check text-success me-2"></i>Professional Setup</li>
+                                            <li><i class="fas fa-check text-success me-2"></i>Hard Cases Included</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6 class="text-muted">Original Value:</h6>
+                                        <p class="text-decoration-line-through text-muted mb-1">€12,999.98</p>
+                                        <h4 class="text-danger mb-0">Special Price: €4,999.99</h4>
+                                        <small class="text-success">Save €8,000!</small>
+                                        <div class="mt-2">
+                                            <small class="text-warning">
+                                                <i class="fas fa-clock me-1"></i>Offer ends in 7 days
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-shopping-cart me-2"></i>
+                                    Get This Special Offer
+                                </a>
+                                <button class="btn btn-outline-secondary">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Learn More
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Special Offers -->
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="badge bg-warning mb-3">Student Discount</div>
+                            <h5 class="card-title">Back to School Special</h5>
+                            <p class="card-text">All students get 15% off any instrument purchase with valid student ID.</p>
+                            <div class="price-info mb-3">
+                                <small class="text-muted">Regular Price</small>
+                                <p class="text-decoration-line-through text-muted mb-1">€1,999.99</p>
+                                <h5 class="text-success mb-0">Student Price: €1,699.99</h5>
+                            </div>
+                            <button class="btn btn-outline-primary">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="badge bg-info mb-3">Bundle Deal</div>
+                            <h5 class="card-title">Complete Beginner Kit</h5>
+                            <p class="card-text">Guitar + Amp + Cables + Tuner + Stand + Lessons - Everything you need to start!</p>
+                            <div class="price-info mb-3">
+                                <small class="text-muted">Individual Value</small>
+                                <p class="text-decoration-line-through text-muted mb-1">€899.99</p>
+                                <h5 class="text-success mb-0">Bundle Price: €599.99</h5>
+                            </div>
+                            <button class="btn btn-outline-primary">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Newsletter Signup for Special Offers -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="card border-0 bg-light">
+                        <div class="card-body text-center p-4">
+                            <h5 class="card-title">Never Miss a Special Offer!</h5>
+                            <p class="card-text">Subscribe to our newsletter and be the first to know about exclusive deals and limited-time offers.</p>
+                            <div class="row justify-content-center">
+                                <div class="col-md-6">
+                                    <div class="input-group mb-3">
+                                        <input type="email" class="form-control" placeholder="Enter your email">
+                                        <button class="btn btn-primary" type="button">
+                                            <i class="fas fa-paper-plane me-2"></i>Subscribe
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

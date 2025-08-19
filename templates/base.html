@@ -9,6 +9,34 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="{% block meta_description %}Instrumento - Premium instrument rental platform. Rent guitars, pianos, drums, and more with flexible plans. Professional quality instruments for musicians of all levels.{% endblock %}">
+  <meta name="keywords" content="{% block meta_keywords %}instrument rental, guitar rental, piano rental, drum rental, music instruments, musician equipment, professional instruments{% endblock %}">
+  <meta name="author" content="Instrumento">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:title" content="{% block og_title %}Instrumento - Your Instrument, Your Journey{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Premium instrument rental platform. Rent guitars, pianos, drums, and more with flexible plans.{% endblock %}">
+  <meta property="og:image" content="{% block og_image %}{% static 'images/instrumento-og-image.jpg' %}{% endblock %}">
+  <meta property="og:site_name" content="Instrumento">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="{{ request.build_absolute_uri }}">
+  <meta property="twitter:title" content="{% block twitter_title %}Instrumento - Your Instrument, Your Journey{% endblock %}">
+  <meta property="twitter:description" content="{% block twitter_description %}Premium instrument rental platform. Rent guitars, pianos, drums, and more with flexible plans.{% endblock %}">
+  <meta property="twitter:image" content="{% block twitter_image %}{% static 'images/instrumento-og-image.jpg' %}{% endblock %}">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="{{ request.build_absolute_uri }}">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
   {% endblock %}
 
   {% block extra_meta %}
@@ -42,6 +70,32 @@
 
   {% block extra_js %}
   {% endblock %}
+  
+  <!-- Schema.org Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MusicStore",
+    "name": "Instrumento",
+    "description": "Premium instrument rental platform for musicians of all levels",
+    "url": "{{ request.build_absolute_uri }}",
+    "logo": "{% static 'images/instrumento-logo.png' %}",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "DE"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "customer service",
+      "availableLanguage": ["English", "German", "Spanish"]
+    },
+    "sameAs": [
+      "https://www.facebook.com/instrumento",
+      "https://www.instagram.com/instrumento",
+      "https://www.youtube.com/instrumento"
+    ]
+  }
+  </script>
 
     <title>Instrumento - Your Instrument, Your Journey {% block extra_title %}{% endblock %}</title>
   

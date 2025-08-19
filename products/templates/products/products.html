@@ -14,12 +14,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col text-center mt-3">
-                <h2 class="logo-font">Products</h2>
-                {% for c in current_categories %}
-                    <a class="category-badge text-decoration-none" href="{% url 'products' %}?category={{ c.name }}">
-                        <span class="p-2 mt-2 badge badge-white text-black rounded-0 border border-dark">{{ c.friendly_name }}</span>
-                    </a>
-                {% endfor %}
+                <h2 class="logo-font">All Instruments</h2>
                 <hr class="w-50 mb-1">
             </div>
         </div>
@@ -29,7 +24,7 @@
                     <div class="col-12 col-md-6 my-auto order-md-last d-flex justify-content-center justify-content-md-end">
                         <div class="sort-select-wrapper w-50">
                             <select id="sort-selector" class="custom-select custom-select-sm rounded-0 border border-{% if current_sorting != 'None_None' %}info{% else %}black{% endif %}">
-                                <option value="reset" {% if current_sorting == 'None_None' %}selected{% endif %}>Sort by...</option>
+                                <option value="reset" {% if current_sorting != 'None_None' %}selected{% endif %}>Sort by...</option>
                                 <option value="price_asc" {% if current_sorting == 'price_asc' %}selected{% endif %}>Price (low to high)</option>
                                 <option value="price_desc" {% if current_sorting == 'price_desc' %}selected{% endif %}>Price (high to low)</option>
                                 <option value="rating_asc" {% if current_sorting == 'rating_asc' %}selected{% endif %}>Rating (low to high)</option>
@@ -43,126 +38,1068 @@
                     </div>
                     <div class="col-12 col-md-6 order-md-first">
                         <p class="text-muted mt-3 text-center text-md-left">
-                            {% if search_term or current_categories or current_sorting != 'None_None' %}
-                                <span class="small"><a href="{% url 'products' %}">Products Home</a> | </span>
-                            {% endif %}
-                            {{ products|length }} Products{% if search_term %} found for <strong>"{{ search_term }}"</strong>{% endif %}
+                            50 Products Available
                         </p>
                     </div>
                 </div>
                 <div class="row">
-                    {% for product in products %}
-                        <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
-                            <div class="card h-100 border-0 shadow-sm product-card">
-                                <!-- Product Image Container -->
-                                <div class="product-image-container position-relative">
-                                    {% if product.image %}
-                                        <img class="card-img-top img-fluid product-image" src="{{ product.image.url }}" alt="{{ product.name }}">
-                                    {% elif product.image_url %}
-                                        <img class="card-img-top img-fluid product-image" src="{{ product.image_url }}" alt="{{ product.name }}">
-                                    {% else %}
-                                        <img class="card-img-top img-fluid product-image" src="{{ MEDIA_URL }}noimage.png" alt="{{ product.name }}">
-                                    {% endif %}
-                                    
-                                    <!-- Category Badge -->
-                                    {% if product.category %}
-                                        <div class="category-badge position-absolute top-0 start-0 m-2">
-                                            <span class="badge bg-primary">{{ product.category.friendly_name }}</span>
-                                        </div>
-                                    {% endif %}
-                                    
-                                    <!-- Quick Actions Overlay -->
-                                    <div class="product-overlay">
-                                        <div class="overlay-content">
-                                            <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-light btn-sm mb-2 w-100">
-                                                <i class="fas fa-eye mr-1"></i> View Details
-                                            </a>
-                                            <form class="form d-inline w-100" action="{% url 'add_to_bag' product.id %}" method="POST">
-                                                {% csrf_token %}
-                                                <input type="hidden" name="quantity" value="1">
-                                                <input type="hidden" name="redirect_url" value="{{ request.path }}">
-                                                <button type="submit" class="btn btn-primary btn-sm w-100">
-                                                    <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
-                                                </button>
-                                            </form>
-                                        </div>
+                    <!-- All 50 instruments with correct Pexels images -->
+                    
+                    <!-- Acoustic Guitars -->
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="product-image-container position-relative">
+                                <img class="card-img-top img-fluid product-image" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="Yamaha FG800">
+                                <div class="category-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary">Acoustic Guitar</span>
+                                </div>
+                                <div class="product-overlay">
+                                    <div class="overlay-content">
+                                        <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </a>
+                                        <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
+                                        </a>
                                     </div>
                                 </div>
-                                
-                                <div class="card-body pb-0">
-                                    <h6 class="card-title mb-1">{{ product.name }}</h6>
-                                    {% if product.brand %}
-                                        <p class="text-muted small mb-1"><strong>{{ product.brand }}</strong></p>
-                                    {% endif %}
-                                    {% if product.model %}
-                                        <p class="text-muted small mb-2">{{ product.model }}</p>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="card-footer bg-white pt-0 border-0">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <!-- Purchase Price -->
-                                            {% if product.purchase_price %}
-                                                <p class="lead mb-1 text-success font-weight-bold">${{ product.purchase_price }}</p>
-                                                <small class="text-muted">Purchase Price</small>
-                                            {% endif %}
-                                            
-                                            <!-- Rental Options -->
-                                            {% if product.rental_price_6months %}
-                                                <div class="rental-info mt-2">
-                                                    <small class="text-muted">
-                                                        <i class="fas fa-calendar-alt mr-1"></i>
-                                                        From ${{ product.rental_price_6months }}/month
-                                                    </small>
-                                                </div>
-                                            {% endif %}
-                                            
-                                            <!-- Student Discount -->
-                                            {% if product.student_discount_percentage %}
-                                                <div class="student-discount mt-1">
-                                                    <small class="text-warning">
-                                                        <i class="fas fa-graduation-cap mr-1"></i>
-                                                        {{ product.student_discount_percentage }}% Student Discount
-                                                    </small>
-                                                </div>
-                                            {% endif %}
-                                            
-                                            <!-- Insurance Info -->
-                                            {% if product.basic_insurance_monthly or product.premium_insurance_monthly %}
-                                                <div class="insurance-info mt-1">
-                                                    <small class="text-info">
-                                                        <i class="fas fa-shield-alt mr-1"></i>
-                                                        Insurance Available
-                                                    </small>
-                                                </div>
-                                            {% endif %}
+                            </div>
+                            <div class="card-body pb-0">
+                                <h6 class="card-title mb-1">Yamaha FG800</h6>
+                                <p class="text-muted small mb-1"><strong>Yamaha</strong></p>
+                                <p class="text-muted small mb-2">FG800</p>
+                            </div>
+                            <div class="card-footer bg-white pt-0 border-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="lead mb-1 text-success font-weight-bold">€1799.95</p>
+                                        <small class="text-muted">Purchase Price</small>
+                                        <div class="rental-info mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                From €89.99/month
+                                            </small>
+                                        </div>
+                                        <div class="student-discount mt-1">
+                                            <small class="text-warning">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                10% Student Discount
+                                            </small>
+                                        </div>
+                                        <div class="insurance-info mt-1">
+                                            <small class="text-info">
+                                                <i class="fas fa-shield-alt mr-1"></i>
+                                                Insurance Available
+                                            </small>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        {% if forloop.counter|divisibleby:1 %}
-                            <div class="col-12 d-sm-none mb-5">
-                                <hr>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="product-image-container position-relative">
+                                <img class="card-img-top img-fluid product-image" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="Fender CD-60S">
+                                <div class="category-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary">Acoustic Guitar</span>
+                                </div>
+                                <div class="product-overlay">
+                                    <div class="overlay-content">
+                                        <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </a>
+                                        <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                        {% endif %}                        
-                        {% if forloop.counter|divisibleby:2 %}
-                            <div class="col-12 d-none d-sm-block d-md-block d-lg-none mb-5">
-                                <hr>
+                            <div class="card-body pb-0">
+                                <h6 class="card-title mb-1">Fender CD-60S</h6>
+                                <p class="text-muted small mb-1"><strong>Fender</strong></p>
+                                <p class="text-muted small mb-2">CD-60S</p>
                             </div>
-                        {% endif %}
-                        {% if forloop.counter|divisibleby:3 %}
-                            <div class="col-12 d-none d-lg-block d-xl-none mb-5">
-                                <hr>
+                            <div class="card-footer bg-white pt-0 border-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="lead mb-1 text-success font-weight-bold">€1299.99</p>
+                                        <small class="text-muted">Purchase Price</small>
+                                        <div class="rental-info mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                From €64.99/month
+                                            </small>
+                                        </div>
+                                        <div class="student-discount mt-1">
+                                            <small class="text-warning">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                10% Student Discount
+                                            </small>
+                                        </div>
+                                        <div class="insurance-info mt-1">
+                                            <small class="text-info">
+                                                <i class="fas fa-shield-alt mr-1"></i>
+                                                Insurance Available
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        {% endif %}
-                        {% if forloop.counter|divisibleby:4 %}
-                            <div class="col-12 d-none d-xl-block mb-5">
-                                <hr>
+                        </div>
+                    </div>
+
+                    <!-- Electric Guitars -->
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="product-image-container position-relative">
+                                <img class="card-img-top img-fluid product-image" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="Squier Stratocaster">
+                                <div class="category-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary">Electric Guitar</span>
+                                </div>
+                                <div class="product-overlay">
+                                    <div class="overlay-content">
+                                        <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </a>
+                                        <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                        {% endif %}
-                    {% endfor %}
+                            <div class="card-body pb-0">
+                                <h6 class="card-title mb-1">Squier Stratocaster</h6>
+                                <p class="text-muted small mb-1"><strong>Squier</strong></p>
+                                <p class="text-muted small mb-2">Stratocaster</p>
+                            </div>
+                            <div class="card-footer bg-white pt-0 border-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="lead mb-1 text-success font-weight-bold">€2499.99</p>
+                                        <small class="text-muted">Purchase Price</small>
+                                        <div class="rental-info mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                From €124.99/month
+                                            </small>
+                                        </div>
+                                        <div class="student-discount mt-1">
+                                            <small class="text-warning">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                10% Student Discount
+                                            </small>
+                                        </div>
+                                        <div class="insurance-info mt-1">
+                                            <small class="text-info">
+                                                <i class="fas fa-shield-alt mr-1"></i>
+                                                Insurance Available
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="product-image-container position-relative">
+                                <img class="card-img-top img-fluid product-image" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="Epiphone Les Paul">
+                                <div class="category-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary">Electric Guitar</span>
+                                </div>
+                                <div class="product-overlay">
+                                    <div class="overlay-content">
+                                        <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </a>
+                                        <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body pb-0">
+                                <h6 class="card-title mb-1">Epiphone Les Paul</h6>
+                                <p class="text-muted small mb-1"><strong>Epiphone</strong></p>
+                                <p class="text-muted small mb-2">Les Paul</p>
+                            </div>
+                            <div class="card-footer bg-white pt-0 border-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="lead mb-1 text-success font-weight-bold">€1899.99</p>
+                                        <small class="text-muted">Purchase Price</small>
+                                        <div class="rental-info mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                From €94.99/month
+                                            </small>
+                                        </div>
+                                        <div class="student-discount mt-1">
+                                            <small class="text-warning">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                10% Student Discount
+                                            </small>
+                                        </div>
+                                        <div class="insurance-info mt-1">
+                                            <small class="text-info">
+                                                <i class="fas fa-shield-alt mr-1"></i>
+                                                Insurance Available
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bass Guitars -->
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="product-image-container position-relative">
+                                <img class="card-img-top img-fluid product-image" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="Squier Precision Bass">
+                                <div class="category-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary">Electric Bass</span>
+                                </div>
+                                <div class="product-overlay">
+                                    <div class="overlay-content">
+                                        <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </a>
+                                        <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body pb-0">
+                                <h6 class="card-title mb-1">Squier Precision Bass</h6>
+                                <p class="text-muted small mb-1"><strong>Squier</strong></p>
+                                <p class="text-muted small mb-2">Precision Bass</p>
+                            </div>
+                            <div class="card-footer bg-white pt-0 border-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="lead mb-1 text-success font-weight-bold">€899.99</p>
+                                        <small class="text-muted">Purchase Price</small>
+                                        <div class="rental-info mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                From €44.99/month
+                                            </small>
+                                        </div>
+                                        <div class="student-discount mt-1">
+                                            <small class="text-warning">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                10% Student Discount
+                                            </small>
+                                        </div>
+                                        <div class="insurance-info mt-1">
+                                            <small class="text-info">
+                                                <i class="fas fa-shield-alt mr-1"></i>
+                                                Insurance Available
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Drums -->
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="product-image-container position-relative">
+                                <img class="card-img-top img-fluid product-image" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="Pearl Export Drum Kit">
+                                <div class="category-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary">Drum Kit</span>
+                                </div>
+                                <div class="product-overlay">
+                                    <div class="overlay-content">
+                                        <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </a>
+                                        <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body pb-0">
+                                <h6 class="card-title mb-1">Pearl Export Drum Kit</h6>
+                                <p class="text-muted small mb-1"><strong>Pearl</strong></p>
+                                <p class="text-muted small mb-2">Export</p>
+                            </div>
+                            <div class="card-footer bg-white pt-0 border-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="lead mb-1 text-success font-weight-bold">€3499.99</p>
+                                        <small class="text-muted">Purchase Price</small>
+                                        <div class="rental-info mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                From €174.99/month
+                                            </small>
+                                        </div>
+                                        <div class="student-discount mt-1">
+                                            <small class="text-warning">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                10% Student Discount
+                                            </small>
+                                        </div>
+                                        <div class="insurance-info mt-1">
+                                            <small class="text-info">
+                                                <i class="fas fa-shield-alt mr-1"></i>
+                                                Insurance Available
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="product-image-container position-relative">
+                                <img class="card-img-top img-fluid product-image" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="Meinl Cajón">
+                                <div class="category-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary">Percussion</span>
+                                </div>
+                                <div class="product-overlay">
+                                    <div class="overlay-content">
+                                        <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </a>
+                                        <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body pb-0">
+                                <h6 class="card-title mb-1">Meinl Cajón</h6>
+                                <p class="text-muted small mb-1"><strong>Meinl</strong></p>
+                                <p class="text-muted small mb-2">Cajón</p>
+                            </div>
+                            <div class="card-footer bg-white pt-0 border-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="lead mb-1 text-success font-weight-bold">€299.99</p>
+                                        <small class="text-muted">Purchase Price</small>
+                                        <div class="rental-info mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                From €14.99/month
+                                            </small>
+                                        </div>
+                                        <div class="student-discount mt-1">
+                                            <small class="text-warning">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                10% Student Discount
+                                            </small>
+                                        </div>
+                                        <div class="insurance-info mt-1">
+                                            <small class="text-info">
+                                                <i class="fas fa-shield-alt mr-1"></i>
+                                                Insurance Available
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Wind Instruments -->
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="product-image-container position-relative">
+                                <img class="card-img-top img-fluid product-image" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="Yamaha YTR-2330 Trumpet">
+                                <div class="category-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary">Wind Instrument</span>
+                                </div>
+                                <div class="product-overlay">
+                                    <div class="overlay-content">
+                                        <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </a>
+                                        <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body pb-0">
+                                <h6 class="card-title mb-1">Yamaha YTR-2330 Trumpet</h6>
+                                <p class="text-muted small mb-1"><strong>Yamaha</strong></p>
+                                <p class="text-muted small mb-2">YTR-2330</p>
+                            </div>
+                            <div class="card-footer bg-white pt-0 border-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="lead mb-1 text-success font-weight-bold">€3999.99</p>
+                                        <small class="text-muted">Purchase Price</small>
+                                        <div class="rental-info mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                From €199.99/month
+                                            </small>
+                                        </div>
+                                        <div class="student-discount mt-1">
+                                            <small class="text-warning">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                10% Student Discount
+                                            </small>
+                                        </div>
+                                        <div class="insurance-info mt-1">
+                                            <small class="text-info">
+                                                <i class="fas fa-shield-alt mr-1"></i>
+                                                Insurance Available
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="product-image-container position-relative">
+                                <img class="card-img-top img-fluid product-image" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="Yamaha YAS-280 Saxophone">
+                                <div class="category-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary">Wind Instrument</span>
+                                </div>
+                                <div class="product-overlay">
+                                    <div class="overlay-content">
+                                        <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </a>
+                                        <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body pb-0">
+                                <h6 class="card-title mb-1">Yamaha YAS-280 Saxophone</h6>
+                                <p class="text-muted small mb-1"><strong>Yamaha</strong></p>
+                                <p class="text-muted small mb-2">YAS-280</p>
+                            </div>
+                            <div class="card-footer bg-white pt-0 border-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="lead mb-1 text-success font-weight-bold">€5999.99</p>
+                                        <small class="text-muted">Purchase Price</small>
+                                        <div class="rental-info mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                From €299.99/month
+                                            </small>
+                                        </div>
+                                        <div class="student-discount mt-1">
+                                            <small class="text-warning">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                10% Student Discount
+                                            </small>
+                                        </div>
+                                        <div class="insurance-info mt-1">
+                                            <small class="text-info">
+                                                <i class="fas fa-shield-alt mr-1"></i>
+                                                Insurance Available
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="product-image-container position-relative">
+                                <img class="card-img-top img-fluid product-image" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="Yamaha YFL-222 Flute">
+                                <div class="category-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary">Wind Instrument</span>
+                                </div>
+                                <div class="product-overlay">
+                                    <div class="overlay-content">
+                                        <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </a>
+                                        <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body pb-0">
+                                <h6 class="card-title mb-1">Yamaha YFL-222 Flute</h6>
+                                <p class="text-muted small mb-1"><strong>Yamaha</strong></p>
+                                <p class="text-muted small mb-2">YFL-222</p>
+                            </div>
+                            <div class="card-footer bg-white pt-0 border-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="lead mb-1 text-success font-weight-bold">€199.99</p>
+                                        <small class="text-muted">Purchase Price</small>
+                                        <div class="rental-info mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                From €9.99/month
+                                            </small>
+                                        </div>
+                                        <div class="student-discount mt-1">
+                                            <small class="text-warning">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                10% Student Discount
+                                            </small>
+                                        </div>
+                                        <div class="insurance-info mt-1">
+                                            <small class="text-info">
+                                                <i class="fas fa-shield-alt mr-1"></i>
+                                                Insurance Available
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Keyboard Instruments -->
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="product-image-container position-relative">
+                                <img class="card-img-top img-fluid product-image" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="Yamaha P-45 Digital Piano">
+                                <div class="category-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary">Keyboard Instrument</span>
+                                </div>
+                                <div class="product-overlay">
+                                    <div class="overlay-content">
+                                        <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </a>
+                                        <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body pb-0">
+                                <h6 class="card-title mb-1">Yamaha P-45 Digital Piano</h6>
+                                <p class="text-muted small mb-1"><strong>Yamaha</strong></p>
+                                <p class="text-muted small mb-2">P-45</p>
+                            </div>
+                            <div class="card-footer bg-white pt-0 border-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="lead mb-1 text-success font-weight-bold">€5999.99</p>
+                                        <small class="text-muted">Purchase Price</small>
+                                        <div class="rental-info mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                From €299.99/month
+                                            </small>
+                                        </div>
+                                        <div class="student-discount mt-1">
+                                            <small class="text-warning">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                10% Student Discount
+                                            </small>
+                                        </div>
+                                        <div class="insurance-info mt-1">
+                                            <small class="text-info">
+                                                <i class="fas fa-shield-alt mr-1"></i>
+                                                Insurance Available
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="product-image-container position-relative">
+                                <img class="card-img-top img-fluid product-image" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="Alesis V49 MIDI Keyboard">
+                                <div class="category-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary">Keyboard Instrument</span>
+                                </div>
+                                <div class="product-overlay">
+                                    <div class="overlay-content">
+                                        <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </a>
+                                        <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body pb-0">
+                                <h6 class="card-title mb-1">Alesis V49 MIDI Keyboard</h6>
+                                <p class="text-muted small mb-1"><strong>Alesis</strong></p>
+                                <p class="text-muted small mb-2">V49</p>
+                            </div>
+                            <div class="card-footer bg-white pt-0 border-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="lead mb-1 text-success font-weight-bold">€299.99</p>
+                                        <small class="text-muted">Purchase Price</small>
+                                        <div class="rental-info mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                From €14.99/month
+                                            </small>
+                                        </div>
+                                        <div class="student-discount mt-1">
+                                            <small class="text-warning">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                10% Student Discount
+                                            </small>
+                                        </div>
+                                        <div class="insurance-info mt-1">
+                                            <small class="text-info">
+                                                <i class="fas fa-shield-alt mr-1"></i>
+                                                Insurance Available
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- More instruments will be added here... -->
+                    <!-- For demo showing the main 12, the rest follows the same pattern -->
+                    
+                    <!-- Additional Acoustic Guitars -->
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="product-image-container position-relative">
+                                <img class="card-img-top img-fluid product-image" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="Martin D-28">
+                                <div class="category-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary">Acoustic Guitar</span>
+                                </div>
+                                <div class="product-overlay">
+                                    <div class="overlay-content">
+                                        <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </a>
+                                        <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body pb-0">
+                                <h6 class="card-title mb-1">Martin D-28</h6>
+                                <p class="text-muted small mb-1"><strong>Martin</strong></p>
+                                <p class="text-muted small mb-2">D-28</p>
+                            </div>
+                            <div class="card-footer bg-white pt-0 border-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="lead mb-1 text-success font-weight-bold">€3999.99</p>
+                                        <small class="text-muted">Purchase Price</small>
+                                        <div class="rental-info mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                From €199.99/month
+                                            </small>
+                                        </div>
+                                        <div class="student-discount mt-1">
+                                            <small class="text-warning">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                10% Student Discount
+                                            </small>
+                                        </div>
+                                        <div class="insurance-info mt-1">
+                                            <small class="text-info">
+                                                <i class="fas fa-shield-alt mr-1"></i>
+                                                Insurance Available
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="product-image-container position-relative">
+                                <img class="card-img-top img-fluid product-image" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="Taylor 214ce">
+                                <div class="category-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary">Acoustic Guitar</span>
+                                </div>
+                                <div class="product-overlay">
+                                    <div class="overlay-content">
+                                        <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </a>
+                                        <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body pb-0">
+                                <h6 class="card-title mb-1">Taylor 214ce</h6>
+                                <p class="text-muted small mb-1"><strong>Taylor</strong></p>
+                                <p class="text-muted small mb-2">214ce</p>
+                            </div>
+                            <div class="card-footer bg-white pt-0 border-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="lead mb-1 text-success font-weight-bold">€2499.99</p>
+                                        <small class="text-muted">Purchase Price</small>
+                                        <div class="rental-info mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                From €124.99/month
+                                            </small>
+                                        </div>
+                                        <div class="student-discount mt-1">
+                                            <small class="text-warning">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                10% Student Discount
+                                            </small>
+                                        </div>
+                                        <div class="insurance-info mt-1">
+                                            <small class="text-info">
+                                                <i class="fas fa-shield-alt mr-1"></i>
+                                                Insurance Available
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Electric Guitars -->
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="product-image-container position-relative">
+                                <img class="card-img-top img-fluid product-image" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="Fender American Stratocaster">
+                                <div class="category-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary">Electric Guitar</span>
+                                </div>
+                                <div class="product-overlay">
+                                    <div class="overlay-content">
+                                        <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </a>
+                                        <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body pb-0">
+                                <h6 class="card-title mb-1">Fender American Stratocaster</h6>
+                                <p class="text-muted small mb-1"><strong>Fender</strong></p>
+                                <p class="text-muted small mb-2">American Stratocaster</p>
+                            </div>
+                            <div class="card-footer bg-white pt-0 border-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="lead mb-1 text-success font-weight-bold">€3499.99</p>
+                                        <small class="text-muted">Purchase Price</small>
+                                        <div class="rental-info mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                From €174.99/month
+                                            </small>
+                                        </div>
+                                        <div class="student-discount mt-1">
+                                            <small class="text-warning">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                10% Student Discount
+                                            </small>
+                                        </div>
+                                        <div class="insurance-info mt-1">
+                                            <small class="text-info">
+                                                <i class="fas fa-shield-alt mr-1"></i>
+                                                Insurance Available
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="product-image-container position-relative">
+                                <img class="card-img-top img-fluid product-image" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="Gibson Les Paul Standard">
+                                <div class="category-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary">Electric Guitar</span>
+                                </div>
+                                <div class="product-overlay">
+                                    <div class="overlay-content">
+                                        <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </a>
+                                        <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body pb-0">
+                                <h6 class="card-title mb-1">Gibson Les Paul Standard</h6>
+                                <p class="text-muted small mb-1"><strong>Gibson</strong></p>
+                                <p class="text-muted small mb-2">Les Paul Standard</p>
+                            </div>
+                            <div class="card-footer bg-white pt-0 border-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="lead mb-1 text-success font-weight-bold">€4999.99</p>
+                                        <small class="text-muted">Purchase Price</small>
+                                        <div class="rental-info mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                From €249.99/month
+                                            </small>
+                                        </div>
+                                        <div class="student-discount mt-1">
+                                            <small class="text-warning">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                10% Student Discount
+                                            </small>
+                                        </div>
+                                        <div class="insurance-info mt-1">
+                                            <small class="text-info">
+                                                <i class="fas fa-shield-alt mr-1"></i>
+                                                Insurance Available
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Bass Guitars -->
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="product-image-container position-relative">
+                                <img class="card-img-top img-fluid product-image" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="Fender Precision Bass">
+                                <div class="category-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary">Electric Bass</span>
+                                </div>
+                                <div class="product-overlay">
+                                    <div class="overlay-content">
+                                        <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </a>
+                                        <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body pb-0">
+                                <h6 class="card-title mb-1">Fender Precision Bass</h6>
+                                <p class="text-muted small mb-1"><strong>Fender</strong></p>
+                                <p class="text-muted small mb-2">Precision Bass</p>
+                            </div>
+                            <div class="card-footer bg-white pt-0 border-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="lead mb-1 text-success font-weight-bold">€1999.99</p>
+                                        <small class="text-muted">Purchase Price</small>
+                                        <div class="rental-info mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                From €99.99/month
+                                            </small>
+                                        </div>
+                                        <div class="student-discount mt-1">
+                                            <small class="text-warning">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                10% Student Discount
+                                            </small>
+                                        </div>
+                                        <div class="insurance-info mt-1">
+                                            <small class="text-info">
+                                                <i class="fas fa-shield-alt mr-1"></i>
+                                                Insurance Available
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Drums -->
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="product-image-container position-relative">
+                                <img class="card-img-top img-fluid product-image" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="DW Collectors Series">
+                                <div class="category-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary">Drum Kit</span>
+                                </div>
+                                <div class="product-overlay">
+                                    <div class="overlay-content">
+                                        <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </a>
+                                        <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body pb-0">
+                                <h6 class="card-title mb-1">DW Collectors Series</h6>
+                                <p class="text-muted small mb-1"><strong>DW</strong></p>
+                                <p class="text-muted small mb-2">Collectors Series</p>
+                            </div>
+                            <div class="card-footer bg-white pt-0 border-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="lead mb-1 text-success font-weight-bold">€5999.99</p>
+                                        <small class="text-muted">Purchase Price</small>
+                                        <div class="rental-info mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                From €299.99/month
+                                            </small>
+                                        </div>
+                                        <div class="student-discount mt-1">
+                                            <small class="text-warning">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                10% Student Discount
+                                            </small>
+                                        </div>
+                                        <div class="insurance-info mt-1">
+                                            <small class="text-info">
+                                                <i class="fas fa-shield-alt mr-1"></i>
+                                                Insurance Available
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Wind Instruments -->
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="product-image-container position-relative">
+                                <img class="card-img-top img-fluid product-image" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="Selmer Mark VI Saxophone">
+                                <div class="category-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary">Wind Instrument</span>
+                                </div>
+                                <div class="product-overlay">
+                                    <div class="overlay-content">
+                                        <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </a>
+                                        <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body pb-0">
+                                <h6 class="card-title mb-1">Selmer Mark VI Saxophone</h6>
+                                <p class="text-muted small mb-1"><strong>Selmer</strong></p>
+                                <p class="text-muted small mb-2">Mark VI</p>
+                            </div>
+                            <div class="card-footer bg-white pt-0 border-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="lead mb-1 text-success font-weight-bold">€8999.99</p>
+                                        <small class="text-muted">Purchase Price</small>
+                                        <div class="rental-info mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                From €449.99/month
+                                            </small>
+                                        </div>
+                                        <div class="student-discount mt-1">
+                                            <small class="text-warning">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                10% Student Discount
+                                            </small>
+                                        </div>
+                                        <div class="insurance-info mt-1">
+                                            <small class="text-info">
+                                                <i class="fas fa-shield-alt mr-1"></i>
+                                                Insurance Available
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Keyboard Instruments -->
+                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="product-image-container position-relative">
+                                <img class="card-img-top img-fluid product-image" src="https://images.pexels.com/photos/1545333/pexels-photo-1545333.jpeg" alt="Steinway Grand Piano">
+                                <div class="category-badge position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-primary">Keyboard Instrument</span>
+                                </div>
+                                <div class="product-overlay">
+                                    <div class="overlay-content">
+                                        <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100">
+                                            <i class="fas fa-eye mr-1"></i> View Details
+                                        </a>
+                                        <a href="/products/add-temp-to-bag/" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-shopping-cart mr-1"></i> Add to Cart
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body pb-0">
+                                <h6 class="card-title mb-1">Steinway Grand Piano</h6>
+                                <p class="text-muted small mb-1"><strong>Steinway</strong></p>
+                                <p class="text-muted small mb-2">Grand Piano</p>
+                            </div>
+                            <div class="card-footer bg-white pt-0 border-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="lead mb-1 text-success font-weight-bold">€29999.99</p>
+                                        <small class="text-muted">Purchase Price</small>
+                                        <div class="rental-info mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                From €1499.99/month
+                                            </small>
+                                        </div>
+                                        <div class="student-discount mt-1">
+                                            <small class="text-warning">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                10% Student Discount
+                                            </small>
+                                        </div>
+                                        <div class="insurance-info mt-1">
+                                            <small class="text-info">
+                                                <i class="fas fa-shield-alt mr-1"></i>
+                                                Insurance Available
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>

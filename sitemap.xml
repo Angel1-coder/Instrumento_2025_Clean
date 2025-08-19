@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- Homepage -->
+    <url>
+        <loc>https://instrumento.com/</loc>
+        <lastmod>2025-01-19</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    
+    <!-- Products -->
+    <url>
+        <loc>https://instrumento.com/products/</loc>
+        <lastmod>2025-01-19</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+    
+    <!-- Rental Instruments -->
+    <url>
+        <loc>https://instrumento.com/products/rental-instruments/</loc>
+        <lastmod>2025-01-19</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <!-- Subscription Plans -->
+    <url>
+        <loc>https://instrumento.com/products/subscription-plans/</loc>
+        <lastmod>2025-01-19</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <!-- Special Offers -->
+    <url>
+        <loc>https://instrumento.com/products/special-offers/</loc>
+        <lastmod>2025-01-19</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+    <!-- User Account -->
+    <url>
+        <loc>https://instrumento.com/profile/</loc>
+        <lastmod>2025-01-19</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <!-- My Rentals -->
+    <url>
+        <loc>https://instrumento.com/products/my-rentals/</loc>
+        <lastmod>2025-01-19</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.6</priority>
+    </url>
+</urlset>
+
+
+

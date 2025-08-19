@@ -8,7 +8,7 @@ django.setup()
 
 from products.models import Product
 
-# Preise für alle Produkte hinzufügen
+# Add prices for all products
 products_data = [
     {'id': 1, 'name': 'Saxophone', 'price': 299.99, 'rating': 4.8},
     {'id': 2, 'name': 'Trumpet', 'price': 199.99, 'rating': 4.6},

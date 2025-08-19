@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Button Test Page</h1>
+    
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <h3>Test Buttons</h3>
+            
+            <!-- Test 1: Direkter Link -->
+            <a href="/checkout/" class="btn btn-primary btn-lg mb-3 w-100">
+                <i class="fas fa-shopping-cart me-2"></i>
+                Test Checkout Link
+            </a>
+            
+            <!-- Test 2: Django URL Tag -->
+            <a href="{% url 'checkout' %}" class="btn btn-success btn-lg mb-3 w-100">
+                <i class="fas fa-credit-card me-2"></i>
+                Test Django URL Tag
+            </a>
+            
+            <!-- Test 3: JavaScript -->
+            <button onclick="window.location.href='/checkout/'" class="btn btn-warning btn-lg mb-3 w-100">
+                <i class="fas fa-code me-2"></i>
+                Test JavaScript
+            </button>
+            
+            <!-- Test 4: Form Submit -->
+            <form action="/checkout/" method="GET" class="d-inline">
+                <button type="submit" class="btn btn-info btn-lg mb-3 w-100">
+                    <i class="fas fa-paper-plane me-2"></i>
+                    Test Form Submit
+                </button>
+            </form>
+        </div>
+        
+        <div class="col-md-8">
+            <h3>Debug Info</h3>
+            <div class="card">
+                <div class="card-body">
+                    <h5>Current URL: {{ request.path }}</h5>
+                    <h5>Checkout URL: {% url 'checkout' %}</h5>
+                    <h5>Available URLs:</h5>
+                    <ul>
+                        <li>Home: <a href="{% url 'home' %}">{% url 'home' %}</a></li>
+                        <li>Products: <a href="{% url 'products' %}">{% url 'products' %}</a></li>
+                        <li>Checkout: <a href="{% url 'checkout' %}">{% url 'checkout' %}</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+

@@ -235,11 +235,92 @@ def my_rentals(request):
 
 
 def rental_instruments(request):
-    """View for rental instruments overview - similar to all_products"""
+    """Display all instruments available for rental"""
     products = Product.objects.filter(available_for_rental=True).order_by('name')
     
     context = {
         'products': products,
     }
+    
     return render(request, 'products/rental_instruments.html', context)
+
+
+def special_offers(request):
+    """Display special offers page"""
+    return render(request, 'products/special_offers.html')
+
+
+def test_buttons(request):
+    """Test page for debugging button functionality"""
+    return render(request, 'products/test_buttons.html')
+
+
+def add_temp_to_bag(request):
+    """Add a temporary product to bag for testing"""
+    # Get plan and price from URL parameters
+    plan_months = request.GET.get('plan', '6')
+    rental_price = request.GET.get('price', '0')
+    rental_type = request.GET.get('type', 'purchase')
+    product_id = request.GET.get('product_id', '')
+    
+    # Clear the old bag completely
+    request.session['bag'] = {}
+    
+    if rental_type == 'rental':
+        # This is a rental subscription
+        try:
+            # Get the specific product if product_id is provided, otherwise get first available
+            if product_id:
+                product = get_object_or_404(Product, pk=product_id, available_for_rental=True)
+            else:
+                product = Product.objects.filter(available_for_rental=True).first()
+                
+            if product:
+                # Fix German number format (comma to dot) and convert to float
+                rental_price_clean = rental_price.replace(',', '.')
+                monthly_price = float(rental_price_clean)
+                
+                # Create a rental subscription entry
+                rental_data = {
+                    'product_id': str(product.id),
+                    'product_name': product.name,
+                    'plan_months': int(plan_months),
+                    'monthly_price': monthly_price,
+                    'type': 'rental_subscription'
+                }
+                
+                # Add to bag with rental information
+                bag = {'rental_subscription': rental_data}
+                request.session['bag'] = bag
+                
+                messages.success(
+                    request, 
+                    f'Rental subscription for {product.name} ({plan_months} months) added to bag!'
+                )
+            else:
+                # No rental products available
+                messages.error(request, 'No rental products available')
+                return redirect('rental_instruments')
+                
+        except Exception as e:
+            messages.error(request, f'Error adding rental subscription: {e}')
+            return redirect('rental_instruments')
+    else:
+        # This is a regular purchase (fallback)
+        try:
+            first_product = Product.objects.first()
+            if first_product:
+                bag = {str(first_product.id): 1}
+                request.session['bag'] = bag
+                messages.success(request, f'Product "{first_product.name}" added to bag!')
+            else:
+                bag = {'dummy_1': 1}
+                request.session['bag'] = bag
+                messages.success(request, 'Test product added to bag!')
+        except Exception as e:
+            bag = {'dummy_1': 1}
+            request.session['bag'] = bag
+            messages.success(request, 'Test product added to bag!')
+    
+    return redirect('checkout')
 
